@@ -1,4 +1,4 @@
-Flight Computer Code for Rocket Goose 4.2 of Arbalest Rocketry created by Tom Pham  
+#Flight Computer Code for Rocket Goose 4.2 of Arbalest Rocketry created by Tom Pham  
 The Kalman Filter Code was base on the information of "Application of the Kalman Filter to Rocket Apogee Detection" - by David W. Schultz, and the help from Leroy Musa
 Stages:
 0: Pre-Launch

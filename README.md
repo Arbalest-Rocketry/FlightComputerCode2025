@@ -1,4 +1,8 @@
 # Arbalest Rocketry Goose 4.2 Flight Computer Software by Ngoc Thach (Tom) Pham
+
+This repository contains the code in Arduino and C++ for our 2 stages high power rocket to launch at Launch Canada 2025  
+
+## Filter
 The Kalman Filter Code was base on the information of "Application of the Kalman Filter to Rocket Apogee Detection" - by David W. Schultz, and the help from Leroy Musa
 Stages:
 0: Pre-Launch

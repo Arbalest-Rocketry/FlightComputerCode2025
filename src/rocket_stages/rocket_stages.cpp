@@ -5,6 +5,7 @@ double old_alt = 0;
 double cur_alt = 0;
 double cur_acc = 0;
 int stage = 0;
+int initialX, initialY;
 const int S1drouge, S1main, S2drouge, S2main, seperation, ignite;
 const char* stageNames[9] = {"PRE_LAUNCH",
                       "LAUNCH_DETECTED",
@@ -60,7 +61,8 @@ bool detector::burnout(double &reading_acc){
     if (count >=3){
         return true;
     }
-    if(cur_acc < 1.5){
+    if(cur_acc > 8){
+        //larger than 8 because 9 is gravity
         count++;
         return false;
     }
@@ -101,7 +103,49 @@ void deployS2drouge(){deployPyro(S2drouge, "Deploy Stage 2 drouge!");}
 void deployS2main(){deployPyro(S2main, "Deploy Stage 2 main!");}
 void deploySeperation(){deployPyro(seperation, "Deploy seperation!");}
 
-void transmit_data(){
+
+void initAngle(double angleX, double angleY){
+    initialX = angleX;
+    initialY = angleY;
+}
+
+
+bool tiltLock(double angleX, double angleY){
+    //angle will be change
+    if((abs((angleY-initialY)>15))){
+        Serial.println("WE COOKED GUYS!!");
+        return true;
+    }
+    if(abs((angleX - initialX )>15)){
+        Serial.println("WE COOKED GUYS!!");
+        return true;
+    }
+    else{return false;}
+}
+
+void cutoff(){
+    pinMode(S1drouge, OUTPUT);
+    pinMode(S1main, OUTPUT);
+    pinMode(S2drouge, OUTPUT);
+    pinMode(S2main, OUTPUT);
+    pinMode(seperation, OUTPUT);
+    pinMode(ignite, OUTPUT);
+}
+
+void transmit_data(double AngleX, double AngleY, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95){
   //transmitting code go here
+    char message[120];
+    snprintf(message, sizeof(message),
+        "AngleX: %.2f, AngleY: %.2f, Raw_Alt: %.2f, Filt_Alt: %.2f, Raw_Acc: %.2f, Filt_Acc: %.2f , Stage: %d",
+        AngleX, AngleY, Raw_Alt,
+        Filt_Alt, Raw_Acc, Filt_Acc, Stage);
+    rf95.send((uint8_t *)message, strlen(message));
+    //rf95.waitPacketSent();
+    Serial.println("✅ Telemetry Sent!");
+
+  
+
+    
+
 }
 

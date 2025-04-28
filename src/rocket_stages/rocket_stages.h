@@ -6,7 +6,10 @@
 #include <Adafruit_BMP280.h>
 #include <Wire.h>
 #include <SD.h>
-#include <math.h>
+#include <cmath>
+#include <RH_RF95.h>
+
+
 struct detector{
   double cur_alt;
   double old_alt;
@@ -26,5 +29,8 @@ void deployS2drouge();
 void deployS2main();
 void deploySeperation();
 void deployIgnition();
-void transmit_data();
+void transmit_data(double AngleX, double AngleY, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95);
+void initAngle(double angleX, double angleY);
+bool tiltLock(double angleX, double angleY);
+void cutoff();
 

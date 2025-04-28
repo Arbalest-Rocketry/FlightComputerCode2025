@@ -73,8 +73,8 @@ bool detector::burnout(double &reading_acc){
     
 }
 void logData(File& dataFile, double rawAccel, double rawAltitude, double filteredAccel, double filteredAltitude, int stage, long time){
-  dataFile = SD.open("FLIGHTDATA.txt", FILE_WRITE);
   if(dataFile){
+    
     dataFile.print("t: ");dataFile.print(time);dataFile.print(", ");
     dataFile.print("raw_accel: ");dataFile.print(rawAccel);dataFile.print(", ");
     dataFile.print("raw_alt: ");dataFile.print(rawAltitude);dataFile.print(", ");
@@ -87,6 +87,7 @@ void logData(File& dataFile, double rawAccel, double rawAltitude, double filtere
   }
   else{
     Serial.println("Error, check card PLSSSSSSSSSSS");
+    
   }
 
 }
@@ -148,4 +149,20 @@ void transmit_data(double AngleX, double AngleY, double Raw_Alt, double Filt_Alt
     
 
 }
+String FileName() {
+    String fileName;
+      String OGfile = "FLIGHTDATA";
+  
+      for (int i = 1; i < 2000; i++) {
+        
+      if (!SD.exists((String(OGfile) + String(i)).c_str()) && SD.exists(String(OGfile).c_str())) {
+           fileName = String(OGfile) + String(i);
+          break;
+  
+      } else {
+         fileName = OGfile; 
+      }   
+  }
+  return fileName;
+  }
 

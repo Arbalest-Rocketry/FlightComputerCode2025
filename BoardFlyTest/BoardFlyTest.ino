@@ -9,6 +9,8 @@
 #include <rocket_stages.h>
 #include <RH_RF95.h>
 
+#include <Adafruit_BME280.h>
+
 
 #define RFM95_CS 9
 #define RFM95_RST 8
@@ -17,7 +19,7 @@
 
   
 
-Adafruit_BMP280 bmp;
+Adafruit_BME280 bme;
 Adafruit_BNO055 bno = Adafruit_BNO055();
 KalmanFilter filter;
 const int chipSelect = 10;
@@ -75,8 +77,8 @@ void setup() {
     Serial.println("Ooops, no BNO055 detected ... Check your wiring or I2C ADDR!");
     while(1);
   }
-  if(!bmp.begin()){
-    Serial.println("No bmp detected");
+  if(!bme.begin()){
+    Serial.println("No bme detected");
     while(1);
   }
   if (!SD.begin(chipSelect)) {
@@ -90,7 +92,7 @@ void setup() {
   imu::Vector<3> a = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
   imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
   acceleration = a.z();
-  altitude = bmp.readAltitude(1024.1);//change depend on the pressure value
+  altitude = bme.readAltitude(1024.1);//change depend on the pressure value
   filter.initial(altitude,acceleration);
   initAngle(euler.x(), euler.y());
   Serial.println(filenameObj);
@@ -98,7 +100,7 @@ void setup() {
 }
 
 void loop() {
-  Serial.println(filenameObj);
+  //Serial.println(filenameObj);
   running_time = millis();
   // put your main code here, to run repeatedly:
   digitalWrite(whiteLED, LOW);
@@ -107,18 +109,19 @@ void loop() {
   imu::Vector<3> a = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
   imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
   acceleration = a.z();
-  altitude = bmp.readAltitude(1024.1);//change depend on the pressure value
+  altitude = bme.readAltitude(1024.1);//change depend on the pressure value
   angleX = euler.x();
   angleY = euler.y();
   filter.filter(altitude,acceleration);
   //Serial.println(a.z());
   //wait 10s for the filter to completely run through
+  
   while(running_time >= 10000){
     
     imu::Vector<3> a = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
     imu::Vector<3> euler = bno.getVector(Adafruit_BNO055::VECTOR_EULER);
     acceleration = a.z();
-    altitude = bmp.readAltitude(1024.1);//change depend on the pressure value
+    altitude = bme.readAltitude(1024.1);//change depend on the pressure value
     angleX = euler.x();
     angleY = euler.y();
     filter.filter(altitude,acceleration);
@@ -222,7 +225,7 @@ void loop() {
             bno.enterSuspendMode();
             bno.setMode(OPERATION_MODE_NDOF);
             bno.setExtCrystalUse(false);
-            bmp.setSampling(Adafruit_BMP280::MODE_SLEEP);
+            bme.setSampling(Adafruit_BME280::MODE_SLEEP);
             stage_detector.stage = 6;
             break;
         case 6:
@@ -253,6 +256,13 @@ void loop() {
             cutoff();
 
     }
+    //PRINT DATA---
+    Serial.print("Altitude: ");Serial.print(filtered_altitude);Serial.print(", ");
+    Serial.print("Acceleration: ");Serial.print(filtered_acceleration);Serial.print(", ");
+    Serial.print("angleX: ");Serial.print(angleX);Serial.print(", ");
+    Serial.print("angleY: ");Serial.print(angleZ);Serial.print(", ");
+    Serial.print("Stage: "); Serial.println(stage_detector.stage);
+  //-------------
   }
 
 

@@ -1,8 +1,8 @@
 #pragma once
 #include <Arduino.h>
-#define ALTITUDESIGMA 19
-#define ACCELERATIONSIGMA 6
-#define MODELSIGMA 0.12
+#define ALTITUDESIGMA 33
+#define ACCELERATIONSIGMA 28
+#define MODELSIGMA 0.1
 
 class KalmanFilter{
   private: 
@@ -11,7 +11,7 @@ class KalmanFilter{
     double H[2][3]; //Transform system state to measurement
     double Ht[3][2]; //H tranpose
     double predict_state[3];
-    double update_state[3];
+    
     double predict_error[3][3];
     
     double current_error[3][3];
@@ -35,6 +35,7 @@ class KalmanFilter{
     void init();
   
   public:
+    double update_state[3];
     double adjust_error[3][3];
     double measurement[2];
     double current_state[3];

@@ -10,9 +10,9 @@ void KalmanFilter::init(){
   Ht[1][0] = 0; Ht[1][1] = 0;
   Ht[2][0] = 0; Ht[2][1] = 1;
 
-  current_error[0][0] = 2; current_error[0][1] = 0; current_error[0][2] = 0;
-  current_error[1][0] = 0; current_error[1][1] = 1.17; current_error[1][2] = 0;
-  current_error[2][0] = 0; current_error[2][1] = 0; current_error[2][2] = 0.3;
+  current_error[0][0] = 3; current_error[0][1] = 0; current_error[0][2] = 0;
+  current_error[1][0] = 0; current_error[1][1] = 2; current_error[1][2] = 0;
+  current_error[2][0] = 0; current_error[2][1] = 0; current_error[2][2] = 3;
 
 }
 
@@ -37,6 +37,8 @@ void KalmanFilter::filter(double barometerAltitude, double accelZ) {
 
   measurement[0] = barometerAltitude;
   measurement[1] = accelZ;
+
+  
 
   predicted_state();
   predicted_error();

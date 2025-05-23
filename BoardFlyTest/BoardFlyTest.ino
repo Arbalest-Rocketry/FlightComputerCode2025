@@ -260,7 +260,7 @@ void loop() {
     Serial.print("Altitude: ");Serial.print(filtered_altitude);Serial.print(", ");
     Serial.print("Acceleration: ");Serial.print(filtered_acceleration);Serial.print(", ");
     Serial.print("angleX: ");Serial.print(angleX);Serial.print(", ");
-    Serial.print("angleY: ");Serial.print(angleZ);Serial.print(", ");
+    Serial.print("angleY: ");Serial.print(angleY);Serial.print(", ");
     Serial.print("Stage: "); Serial.println(stage_detector.stage);
   //-------------
   }

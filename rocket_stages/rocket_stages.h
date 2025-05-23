@@ -11,10 +11,10 @@
 
 
 struct detector{
-  const int WINDOW_SIZE;
-  double windowList[];
+  const int WINDOW_SIZE = 8;
+  double windowList[8];
   bool listFilled;
-  int index;
+  int windowindex;
   double currentSum;
   double previousSum;
   double oldestAlt;

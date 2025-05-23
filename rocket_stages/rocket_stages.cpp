@@ -8,10 +8,10 @@ int stage = 0;
 int initialX, initialY;
 const int S1drouge, S1main, S2drouge, S2main, seperation, ignite;
 
-const int WINDOW_SIZE = 8;
-double windowList[WINDOW_SIZE];
+//const int WINDOW_SIZE = 8;
+double windowList[8];
 bool listFilled = false;
-int index = 0;
+int windowindex = 0;
 int currentSum = 0;
 int previousSum = 0;
 double oldestAlt = 0;
@@ -25,6 +25,8 @@ const char* stageNames[9] = {"PRE_LAUNCH",
                       "MAIN_CHUTE_DEPLOYED",
                       "LANDING_DETECTED",
                       "LOW_POWER_MODE"};
+
+/*
 
 bool detector::apogee(double& reading_alt){
         cur_alt = reading_alt;
@@ -49,26 +51,29 @@ bool detector::apogee(double& reading_alt){
         }
         
 }
-/*
-*I may change to this for apogee later
+*/
+
+
+//I may change to this for apogee later
 bool detector::apogee(double& reading_alt){
     if(!listFilled){
-        windowList[index] = reading_alt;
+        windowList[windowindex] = reading_alt;
         currentSum += reading_alt;
-        index++;
-        if(index == WINDOW_SIZE){
+        windowindex++;
+        if(windowindex == WINDOW_SIZE){
             listFilled = true;
-            index = 0;
+            windowindex = 0;
         }
+        return false;
     }
     else{
-        oldestAlt = windowList[index];
+        oldestAlt = windowList[windowindex];
 
         previousSum = currentSum - oldestAlt;
         currentSum = previousSum + reading_alt;
 
-        windowList[index] = reading_alt;
-        index = (index+1)%8;
+        windowList[windowindex] = reading_alt;
+        windowindex = (windowindex+1)%8;
         if(currentSum < previousSum){
             count++;
         }
@@ -76,6 +81,7 @@ bool detector::apogee(double& reading_alt){
             count = 0;
         }
         if(count>=8){
+            count = 0;
             return true;
         }
         else{
@@ -83,7 +89,7 @@ bool detector::apogee(double& reading_alt){
         }
     }
 }
-*/
+
 bool detector::land(double &reading_alt){
     cur_alt = reading_alt;
     if(count >=4){

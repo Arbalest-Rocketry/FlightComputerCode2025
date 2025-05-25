@@ -6,10 +6,10 @@ double cur_alt = 0;
 double cur_acc = 0;
 int stage = 0;
 int initialX, initialY;
-const int S1drouge, S1main, S2drouge, S2main, seperation, ignite;
+const int S1drouge = 20, S1main = 21, S2drouge, S2main, seperation, ignite;
 
 //const int WINDOW_SIZE = 8;
-double windowList[8];
+double windowList[33];
 bool listFilled = false;
 int windowindex = 0;
 int currentSum = 0;
@@ -56,6 +56,8 @@ bool detector::apogee(double& reading_alt){
 
 //I may change to this for apogee later
 bool detector::apogee(double& reading_alt){
+    Serial.print(reading_alt);Serial.print(", ");Serial.print(!listFilled);Serial.print(", ");Serial.print(count);Serial.print(", ");Serial.println((currentSum - previousSum));
+    
     if(!listFilled){
         windowList[windowindex] = reading_alt;
         currentSum += reading_alt;
@@ -67,14 +69,15 @@ bool detector::apogee(double& reading_alt){
         return false;
     }
     else{
+        
         oldestAlt = windowList[windowindex];
 
-        previousSum = currentSum - oldestAlt;
-        currentSum = previousSum + reading_alt;
+        previousSum = currentSum ;
+        currentSum = currentSum + reading_alt - oldestAlt;
 
         windowList[windowindex] = reading_alt;
-        windowindex = (windowindex+1)%8;
-        if(currentSum < previousSum){
+        windowindex = (windowindex+1) % WINDOW_SIZE;
+        if((currentSum - previousSum) < 0.3){
             count++;
         }
         else{
@@ -91,6 +94,7 @@ bool detector::apogee(double& reading_alt){
 }
 
 bool detector::land(double &reading_alt){
+    Serial.println(count);
     cur_alt = reading_alt;
     if(count >=4){
         count = 0;
@@ -109,6 +113,7 @@ bool detector::land(double &reading_alt){
 bool detector::burnout(double &reading_acc){
     cur_acc = reading_acc;
     if (count >=3){
+        count = 0;
         return true;
     }
     if(cur_acc > 8){
@@ -144,8 +149,8 @@ void logData(File& dataFile, double rawAccel, double rawAltitude, double filtere
 void deployPyro(int pin, const char* message){
   Serial.println(message);
   digitalWrite(pin, HIGH);
-  delay(5000);
-  digitalWrite(pin, LOW);
+  //delay(5000);
+  //digitalWrite(pin, LOW);
 }
 void deployIgnition(){deployPyro(ignite, "Deploying Ignite Pyro!");}
 void deployS1drouge(){deployPyro(S1drouge, "Deploy Stage 1 drouge!");}
@@ -183,12 +188,12 @@ void cutoff(){
     pinMode(ignite, OUTPUT);
 }
 
-void transmit_data(double AngleX, double AngleY, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95){
+void transmit_data(double AngleX, double AngleY, double AngleZ, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95){
   //transmitting code go here
     char message[120];
     snprintf(message, sizeof(message),
-        "AngleX: %.2f, AngleY: %.2f, Raw_Alt: %.2f, Filt_Alt: %.2f, Raw_Acc: %.2f, Filt_Acc: %.2f , Stage: %d",
-        AngleX, AngleY, Raw_Alt,
+        "AngleX: %.2f, AngleY: %.2f, AngleZ: %.2f, Raw_Alt: %.2f, Filt_Alt: %.2f, Raw_Acc: %.2f, Filt_Acc: %.2f , Stage: %d",
+        AngleX, AngleY, AngleZ, Raw_Alt,
         Filt_Alt, Raw_Acc, Filt_Acc, Stage);
     rf95.send((uint8_t *)message, strlen(message));
     //rf95.waitPacketSent();

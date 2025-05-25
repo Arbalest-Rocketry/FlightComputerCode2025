@@ -11,8 +11,8 @@
 
 
 struct detector{
-  const int WINDOW_SIZE = 8;
-  double windowList[8];
+  const int WINDOW_SIZE = 33;
+  double windowList[33];
   bool listFilled;
   int windowindex;
   double currentSum;
@@ -39,7 +39,7 @@ void deployS2drouge();
 void deployS2main();
 void deploySeperation();
 void deployIgnition();
-void transmit_data(double AngleX, double AngleY, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95);
+void transmit_data(double AngleX, double AngleY, double AngleZ, double Raw_Alt, double Filt_Alt, double Raw_Acc, double Filt_Acc, int Stage, RH_RF95 rf95);
 void initAngle(double angleX, double angleY);
 bool tiltLock(double angleX, double angleY);
 void cutoff();

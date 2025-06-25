@@ -7,7 +7,7 @@ The Kalman Filter Code was base on the information of "Application of the Kalman
 
 ## Stages
 
-The rocket model contain 2 stages with 2 seperate flight computer, Stage 1 will be mount on the lower stage of the rocket and Stage 2 will be the upper stage. Each stage will have a different state machine, for stage 1, the state machine will begin from pre-launch and end when the lower stage land; stage 2 will also begin from pre-launch so we can check the mutual reading from stage 1, after seperation, stage 2 will ignite to the second stage apogee and end when it land. Both stage state machine will begin when our gps get reading so we can do recovery it later.  
+The rocket model contain 2 stages with 2 seperate flight computer, Stage 1 will be mount on the lower stage of the rocket and Stage 2 will be the upper stage. Each stage will have a different state machine, for stage 1, the state machine will begin from pre-launch and end when the lower stage land; stage 2 will also begin from pre-launch so we can check the mutual reading from stage 1, after seperation, stage 2 will ignite to the second stage apogee and end when it land. Both stage state machine will begin when our gps get reading so we can do recovery it later, they also logging when the state machine begin and stop when landing is detect.  
 
 Stage 1:  
 0: Pre-Launch  
